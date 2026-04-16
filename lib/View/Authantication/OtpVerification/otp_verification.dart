@@ -87,7 +87,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             ),
             8.verticalSpace,
             Text(
-              'Enter the verification code sent\nto your email',
+              'Enter the verification code sent\nto your number',
               textAlign: TextAlign.center,
               style: context.titleMedium!.copyWith(color: black),
             ),

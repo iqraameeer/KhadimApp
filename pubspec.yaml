@@ -40,6 +40,8 @@ dependencies:
   dio:
   uuid:
   lottie:
+  carousel_slider:
+
 
 dev_dependencies:
   flutter_test:

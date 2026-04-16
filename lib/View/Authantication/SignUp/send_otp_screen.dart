@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:khadim_app/Utils/Extensions/text_extension.dart';
+import 'package:khadim_app/Widgets/custom_button.dart';
+import '../../../Config/AppRoutes/route_imports.dart';
 import '../../../Utils/Const/asset_const.dart';
 import '../../../Utils/Const/color_const.dart';
 import 'signup_view_model.dart';
@@ -24,23 +27,67 @@ class _sendOtpScreenState extends State<sendOtpScreen> {
   final FocusNode _focusNodeThree = FocusNode();
   final FocusNode _focusNodeFour = FocusNode();
 
-  final SignupViewModel _controller = Get.find<SignupViewModel>();
-
   @override
   void initState() {
     super.initState();
-    _fieldOne.addListener(_onOtpChange);
-    _fieldTwo.addListener(_onOtpChange);
-    _fieldThree.addListener(_onOtpChange);
-    _fieldFour.addListener(_onOtpChange);
+    _fieldOne.addListener(_checkOtp);
+    _fieldTwo.addListener(_checkOtp);
+    _fieldThree.addListener(_checkOtp);
+    _fieldFour.addListener(_checkOtp);
   }
 
-  void _onOtpChange() {
+  void _checkOtp() {
     if (_fieldOne.text.isNotEmpty &&
         _fieldTwo.text.isNotEmpty &&
         _fieldThree.text.isNotEmpty &&
         _fieldFour.text.isNotEmpty) {
-      _controller.showSuccessDialog(context);
+      Future.delayed(Duration(milliseconds: 300), () {
+        signupDialouge() {
+          Get.dialog(
+            AlertDialog(
+              backgroundColor: white,
+              content: SizedBox(
+                width: 375.w,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      20.verticalSpace,
+                      Image.asset(ImageConst.done),
+                      36.verticalSpace,
+                      Text(
+                        'Account Created\nSuccessfully',
+                        style: Get.context!.headlineMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      20.verticalSpace,
+                      Text(
+                        'Your Account has been created.',
+                        textAlign: TextAlign.center,
+                        style: context.titleSmall!
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      45.verticalSpace,
+                      CustomButton(
+                        onTap: () {
+                          Get.offAllNamed(
+                              AppRoutes.login
+                          );
+                        },
+                       title: 'Done',
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            barrierDismissible: false,
+          );
+        }
+
+        signupDialouge();
+      });
     }
   }
 
@@ -60,86 +107,111 @@ class _sendOtpScreenState extends State<sendOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new,
-            color: primary,
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-      ),
-      extendBodyBehindAppBar: true,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-          child: Column(
-            children: [
-              40.verticalSpace,
-              Center(child: Image.asset(ImageConst.logo)),
-              20.verticalSpace,
-              Text(
-                'Verification Code',
-                style: context.displaySmall!.copyWith(color: primary),
+        bottom: false,
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back_ios_new, color: black),
+                onPressed: () => Get.back(),
               ),
-              5.verticalSpace,
-              Text(
-                'Enter the verification code sent\nto your number',
-                style: context.bodyLarge!.copyWith(color: primary),
-                textAlign: TextAlign.center,
+            ),
+            20.verticalSpace,
+            Image.asset(
+              ImageConst.splash,
+              height: 90,
+            ),
+            20.verticalSpace,
+            Text(
+              'Verification Code',
+              style: context.headlineLarge!.copyWith(
+                color: black,
+                fontWeight: FontWeight.bold,
               ),
-              41.verticalSpace,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  OtpInput(
-                      controller: _fieldOne,
-                      autoFocus: true,
-                      focusNode: _focusNodeOne,
-                      nextFocusNode: _focusNodeTwo),
-                  OtpInput(
-                    controller: _fieldTwo,
-                    autoFocus: false,
-                    focusNode: _focusNodeTwo,
-                    previousFocusNode: _focusNodeOne,
-                    nextFocusNode: _focusNodeThree,
+            ),
+            8.verticalSpace,
+            Text(
+              'Enter the verification code sent\nto your number',
+              textAlign: TextAlign.center,
+              style: context.titleMedium!.copyWith(color: black),
+            ),
+            30.verticalSpace,
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: secondary,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(60.r),
+                    topRight: Radius.circular(60.r),
                   ),
-                  OtpInput(
-                      controller: _fieldThree,
-                      autoFocus: false,
-                      focusNode: _focusNodeThree,
-                      previousFocusNode: _focusNodeTwo,
-                      nextFocusNode: _focusNodeFour),
-                  OtpInput(
-                      controller: _fieldFour,
-                      autoFocus: false,
-                      focusNode: _focusNodeFour,
-                      previousFocusNode: _focusNodeThree),
-                ],
-              ),
-              40.verticalSpace,
-              RichText(
-                text: TextSpan(
-                  text: 'I don’t receive a code!',
-                  style: context.bodyLarge!.copyWith(color: grey),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: ' Please Resend',
-                        style: context.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w700, color: primary)),
-                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 40.h,
+                  ),
+                  child: Column(
+                    children: [
+                      80.verticalSpace,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          OtpInput(
+                            controller: _fieldOne,
+                            autoFocus: true,
+                            focusNode: _focusNodeOne,
+                            nextFocusNode: _focusNodeTwo,
+                          ),
+                          OtpInput(
+                            controller: _fieldTwo,
+                            focusNode: _focusNodeTwo,
+                            previousFocusNode: _focusNodeOne,
+                            nextFocusNode: _focusNodeThree,
+                          ),
+                          OtpInput(
+                            controller: _fieldThree,
+                            focusNode: _focusNodeThree,
+                            previousFocusNode: _focusNodeTwo,
+                            nextFocusNode: _focusNodeFour,
+                          ),
+                          OtpInput(
+                            controller: _fieldFour,
+                            focusNode: _focusNodeFour,
+                            previousFocusNode: _focusNodeThree,
+                          ),
+                        ],
+                      ),
+                      40.verticalSpace,
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: 'I don’t receive a code!',
+                          style: context.bodyLarge!.copyWith(color: black),
+                          children: [
+                            TextSpan(
+                              text: ' Please Resend',
+                              style: context.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
 class OtpInput extends StatelessWidget {
   final TextEditingController controller;
   final bool autoFocus;
@@ -148,44 +220,64 @@ class OtpInput extends StatelessWidget {
   final FocusNode? nextFocusNode;
 
   const OtpInput({
-    Key? key,
+    super.key,
     required this.controller,
     this.autoFocus = false,
     required this.focusNode,
     this.previousFocusNode,
     this.nextFocusNode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80.h,
-      width: 80.w,
-      child: TextFormField(
-        autofocus: autoFocus,
-        controller: controller,
-        focusNode: focusNode,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.r),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: secondary.withOpacity(0.3),
-          counterText: '',
-          contentPadding: EdgeInsets.all(18),
-        ),
-        style: TextStyle(fontSize: 30.sp, color: primary),
-        onChanged: (value) {
-          if (value.length == 1 && nextFocusNode != null) {
-            FocusScope.of(context).requestFocus(nextFocusNode);
-          } else if (value.isEmpty && previousFocusNode != null) {
-            FocusScope.of(context).requestFocus(previousFocusNode);
+      height: 60.h,
+      width: 60.w,
+      child: RawKeyboardListener(
+        focusNode: FocusNode(), // For keyboard events
+        onKey: (RawKeyEvent event) {
+          if (event is RawKeyDownEvent) {
+            if (event.logicalKey == LogicalKeyboardKey.backspace) {
+              // Backspace pressed
+              if (controller.text.isEmpty && previousFocusNode != null) {
+                FocusScope.of(context).requestFocus(previousFocusNode);
+              }
+            }
           }
         },
+        child: TextField(
+          autofocus: autoFocus,
+          controller: controller,
+          focusNode: focusNode,
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.number,
+          maxLength: 1,
+          style: TextStyle(
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+            color: black,
+          ),
+          decoration: InputDecoration(
+            counterText: '',
+            contentPadding: EdgeInsets.symmetric(vertical: 18.h),
+            filled: true,
+            fillColor:
+            focusNode.hasFocus ? white : white.withOpacity(0.7),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.r),
+              borderSide: BorderSide(color: primary, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.r),
+              borderSide: BorderSide(color: primary, width: 1),
+            ),
+          ),
+          onChanged: (value) {
+            if (value.length == 1 && nextFocusNode != null) {
+              FocusScope.of(context).requestFocus(nextFocusNode);
+            }
+          },
+        ),
       ),
     );
   }

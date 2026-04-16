@@ -14,9 +14,11 @@ class ImageConst {
 
   /// Images
   static String splash = "${image}splash.jpg";
+  static String imageOne = "${image}imageOne.jpg";
+  static String imageTwo = "${image}imageTwo.jpg";
+  static String imageThree = "${image}imageThree.jpg";
   static String logo = "${image}logo.jpg";
   static String signin = "${image}signin.jpg";
-    static String profile = "${image}profile.png";
-
- 
+  static String profile = "${image}profile.png";
+  static String done = "${image}done.png";
 }

@@ -113,7 +113,10 @@ class SigninScreen extends StatelessWidget {
                     height: 48.h,
                     child: CustomButton(
                       title: 'Login',
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed(AppRoutes.bottomNav);
+
+                      },
                     ),
                   ),
                   30.verticalSpace,

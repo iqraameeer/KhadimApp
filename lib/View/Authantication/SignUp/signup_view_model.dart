@@ -1,15 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:khadim_app/Utils/Extensions/text_extension.dart';
 import '../../../Config/AppRoutes/route_imports.dart';
-import '../../../Data/repositories/AuthRepository/auth_repository.dart';
 import '../../../Utils/Const/color_const.dart';
 import '../../../Widgets/custom_button.dart';
-import '../../../Widgets/custom_snackbar.dart';
-import '../../../Widgets/loader_widget.dart';
-import 'package:uuid/uuid.dart';
+
 
 class SignupViewModel extends GetxController {
   GlobalKey<FormState>? signUpFormKey;
@@ -80,7 +76,7 @@ class SignupViewModel extends GetxController {
                   title: 'GENERATE OTP',
                   onTap: () {
                     Navigator.of(ctx).pop();
-                    Get.toNamed(AppRoutes.otpverification);
+                    Get.toNamed(AppRoutes.sendOtp);
                   },
                 ),
               ),
